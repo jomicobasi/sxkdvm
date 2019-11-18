@@ -25,7 +25,7 @@ if [ -c /dev/kvm ]; then
 	KVM_ARGS='-enable-kvm'
 fi
 
-exec qemu-system-x86_64 $KVM_ARGS -m 8192 -cpu core2duo,kvm=off \
+qemu-system-x86_64 $KVM_ARGS -m 8192 -cpu core2duo,kvm=off \
 	  -machine pc-q35-2.4 \
 	  -smp 4,cores=2 \
 	  -usb -device usb-kbd -device usb-tablet \
@@ -34,6 +34,6 @@ exec qemu-system-x86_64 $KVM_ARGS -m 8192 -cpu core2duo,kvm=off \
 	  -smbios type=2 \
 	  -device ide-drive,bus=ide.2,drive=MacHDD \
 	  -drive id=MacHDD,if=none,file=$SNAPSHOT_DIR/mac_hdd.img \
-      	  -netdev user,id=usr0 -device e1000-82545em,netdev=usr0,id=vnet0 \
+      	  -netdev user,id=usr0,hostfwd=tcp::17010-:17010 -device e1000-82545em,netdev=usr0,id=vnet0 \
 	  -device ich9-intel-hda -device hda-duplex \
-	  -display none -redir tcp:2222::22 -vnc 0.0.0.0:0
+	  -display none -vnc 0.0.0.0:0
